@@ -344,7 +344,7 @@ export async function getDailyBundle(
 		apiKey,
 		{
 			queryParams: { date },
-			noticeMessage: `Fetching Newslog bundle for ${date}...`,
+			noticeMessage: `Fetching newslog bundle for ${date}...`,
 		}
 	);
 

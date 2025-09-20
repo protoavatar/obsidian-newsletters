@@ -1,33 +1,30 @@
 import { Plugin } from "obsidian";
 import { NewslogSettings } from "./types";
-import {
-  DEFAULT_SETTINGS,
-  NewslogSettingTab,
-} from "./settings";
+import { DEFAULT_SETTINGS, NewslogSettingTab } from "./settings";
 import { registerCommands } from "./commands";
 
 export default class Newslog extends Plugin {
-  settings!: NewslogSettings;
+	settings!: NewslogSettings;
 
-  async onload() {
-    await this.loadSettings();
+	async onload() {
+		await this.loadSettings();
 
-    registerCommands(this);
+		registerCommands(this);
 
-    this.addSettingTab(new NewslogSettingTab(this.app, this));
+		this.addSettingTab(new NewslogSettingTab(this.app, this));
 
-    console.log("Newslog Sync Plugin Loaded");
-  }
+		console.log("newslog Sync Plugin Loaded");
+	}
 
-  onunload() {
-    console.log("Newslog Sync Plugin Unloaded");
-  }
+	onunload() {
+		console.log("newslog Sync Plugin Unloaded");
+	}
 
-  async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-  }
+	async loadSettings() {
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	}
 
-  async saveSettings() {
-    await this.saveData(this.settings);
-  }
+	async saveSettings() {
+		await this.saveData(this.settings);
+	}
 }

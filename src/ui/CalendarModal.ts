@@ -1,14 +1,6 @@
-import {
-    App,
-    Modal,
-    Notice,
-    moment,
-} from "obsidian";
+import { App, Modal, Notice, moment } from "obsidian";
 import NewslogSyncPlugin from "../main";
-import {
-    getDailyBundle,
-    downloadFileContent,
-} from "../api";
+import { getDailyBundle, downloadFileContent } from "../api";
 
 export class CalendarModal extends Modal {
 	plugin: NewslogSyncPlugin;
@@ -23,7 +15,7 @@ export class CalendarModal extends Modal {
 	onOpen() {
 		const { contentEl } = this;
 		contentEl.empty();
-		contentEl.createEl("h2", { text: "Download Newslog Bundle" });
+		contentEl.createEl("h2", { text: "Download newslog Bundle" });
 		contentEl.createEl("p", {
 			text: "Select a date to download the bundle(s). Dates with downloaded bundles are highlighted.",
 		});
