@@ -1,0 +1,13 @@
+{
+	"id": "obsidian-newsletters",
+	"name": "newslog",
+	"version": "0.1.0",
+	"minAppVersion": "0.15.0",
+	"description": "Sync newsletters and kindle highlights from your newslog.me daily bundles.",
+	"author": "protoavatar",
+	"authorUrl": "https://github.com/protoavatar",
+	"fundingUrl": {
+		"newslog.me": "https://newslog.me"
+	},
+	"isDesktopOnly": false
+}

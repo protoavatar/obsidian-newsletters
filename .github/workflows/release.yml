@@ -1,0 +1,50 @@
+# .github/workflows/release.yml
+
+name: Release Obsidian Plugin
+
+on:
+  push:
+    tags:
+      - "*" # Se activa con cualquier tag que se suba
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clona el repositorio para tener acceso al código y los scripts
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura Node.js para poder instalar dependencias y compilar
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "16" # Usa la versión de Node que necesites
+
+      # 3. Instala las dependencias del proyecto (usando pnpm como en tu pnpm-lock.yaml)
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8 # La versión de pnpm que usas
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # 4. Compila el plugin para generar los archivos de producción
+      - name: Build plugin
+        run: pnpm run build
+
+      # 5. Crea la Release en GitHub y adjunta los archivos
+      #    Este action es muy popular para este propósito.
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          # El cuerpo de la release puede ser autogenerado a partir de los commits
+          generate_release_notes: true
+          # Archivos que se adjuntarán a la release
+          files: |
+            main.js
+            manifest.json
+            styles.css
