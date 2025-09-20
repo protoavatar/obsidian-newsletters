@@ -11,6 +11,10 @@ jobs:
   build-and-release:
     runs-on: ubuntu-latest
 
+    permissions:
+      # Necesario para que el action softprops/action-gh-release pueda crear la release.
+      contents: write
+
     steps:
       # 1. Clona el repositorio para tener acceso al código y los scripts
       - name: Checkout repository
