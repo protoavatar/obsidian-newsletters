@@ -92,17 +92,17 @@ async function makeNewslogRequest(
 	}
 
 	try {
-		const response = await fetch(url.toString(), {
-			headers: headers as HeadersInit,
+		const response = await requestUrl({
+			url: url.toString(),
+			headers: headers as Record<string, string>,
 		});
 
-		if (!response.ok) {
-			const errorText = await response
-				.text()
-				.catch(() => "Could not read error body");
+		if (response.status === 200) {
+			return response.json;
+		} else {
 			console.error(
-				`Error from ${endpoint}: ${response.status} ${response.statusText}`,
-				errorText
+				`Error from ${endpoint}: ${response.status}`,
+				response.text
 			);
 			new Notice(
 				`Server error: ${response.status}. See console for details.`,
@@ -110,8 +110,6 @@ async function makeNewslogRequest(
 			);
 			return null;
 		}
-
-		return await response.json();
 	} catch (error) {
 		console.error(`Network or other error from ${endpoint}:`, error);
 		new Notice(`Network error. See console for details.`, 7000);
@@ -174,23 +172,26 @@ export async function uploadFileToS3(
 	new Notice(`Uploading ${file.name}...`);
 
 	try {
-		const response = await fetch(uploadUrl, {
+		const response = await requestUrl({
+			url: uploadUrl,
 			method: "PUT",
-			body: file,
+			body: await file.arrayBuffer(),
 			headers: {
-				// Include Content-Type for S3 upload
-				// Note: API Key is generally not needed for direct S3 upload via pre-signed URL, but including it for consistency if your backend expects it.
-				"Content-Type": file.type || "application/octet-stream", // Set content type based on file or default
+				"Content-Type": file.type || "application/octet-stream",
 			},
 		});
 
-		if (!response.ok) {
-			const errorText = await response
-				.text()
-				.catch(() => "Could not read error body");
+		if (response.status === 200) {
+			console.log(`Successfully uploaded ${file.name} to S3.`);
+			new Notice(
+				`Successfully uploaded ${file.name}! Processing will continue on the server.`,
+				7000
+			);
+			return true;
+		} else {
 			console.error(
-				`Error uploading file to S3: ${response.status} ${response.statusText}`,
-				errorText
+				`Error uploading file to S3: ${response.status}`,
+				response.text
 			);
 			new Notice(
 				`Error uploading file: ${response.status}. See console.`,
@@ -198,13 +199,6 @@ export async function uploadFileToS3(
 			);
 			return false;
 		}
-
-		console.log(`Successfully uploaded ${file.name} to S3.`);
-		new Notice(
-			`Successfully uploaded ${file.name}! Processing will continue on the server.`,
-			7000
-		);
-		return true;
 	} catch (error) {
 		console.error(`Network or other error uploading file:`, error);
 		new Notice(`Network error uploading file. See console.`, 7000);
