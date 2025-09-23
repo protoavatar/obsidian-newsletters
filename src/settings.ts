@@ -2,8 +2,6 @@ import { App, PluginSettingTab, Setting } from "obsidian";
 import NewslogSyncPlugin from "./main";
 import { NewslogSyncSettings } from "./types";
 
-export { NewslogSyncSettings };
-
 export const DEFAULT_SETTINGS: NewslogSyncSettings = {
 	newsletters: [],
 	username: "",

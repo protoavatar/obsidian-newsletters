@@ -1,10 +1,11 @@
 import { Plugin } from 'obsidian';
-import { NewslogSyncSettings, DEFAULT_SETTINGS, NewslogSettingTab } from './settings';
+import { NewslogSyncSettings } from './types';
+import { DEFAULT_SETTINGS, NewslogSettingTab } from './settings';
 import { registerCommands, downloadDailyBundle } from './commands';
 import * as api from './api';
 
 export default class NewslogSyncPlugin extends Plugin {
-	settings: NewslogSyncSettings;
+	settings!: NewslogSyncSettings;
 	api = api;
 
 	async onload() {
