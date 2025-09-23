@@ -1,10 +1,11 @@
-import { Plugin } from "obsidian";
-import { NewslogSettings } from "./types";
-import { DEFAULT_SETTINGS, NewslogSettingTab } from "./settings";
-import { registerCommands } from "./commands";
+import { Plugin } from 'obsidian';
+import { NewslogSyncSettings, DEFAULT_SETTINGS, NewslogSettingTab } from './settings';
+import { registerCommands, downloadDailyBundle } from './commands';
+import * as api from './api';
 
-export default class Newslog extends Plugin {
-	settings!: NewslogSettings;
+export default class NewslogSyncPlugin extends Plugin {
+	settings: NewslogSyncSettings;
+	api = api;
 
 	async onload() {
 		await this.loadSettings();
@@ -13,11 +14,12 @@ export default class Newslog extends Plugin {
 
 		this.addSettingTab(new NewslogSettingTab(this.app, this));
 
-		console.log("newslog Sync Plugin Loaded");
+		// Make the downloadDailyBundle function available globally on the plugin instance
+		(this as any).downloadDailyBundle = (date: string) => downloadDailyBundle(this, date);
 	}
 
 	onunload() {
-		console.log("newslog Sync Plugin Unloaded");
+
 	}
 
 	async loadSettings() {

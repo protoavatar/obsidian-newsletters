@@ -1,8 +1,8 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import Newslog from "./main";
-import { NewslogSettings } from "./types";
+import NewslogSyncPlugin from "./main";
+import { NewslogSyncSettings } from "./types";
 
-export const DEFAULT_SETTINGS: NewslogSettings = {
+export const DEFAULT_SETTINGS: NewslogSyncSettings = {
 	newsletters: [],
 	username: "",
 	apiKey: "",
@@ -13,9 +13,9 @@ export const DEFAULT_SETTINGS: NewslogSettings = {
 };
 
 export class NewslogSettingTab extends PluginSettingTab {
-	plugin: Newslog;
+	plugin: NewslogSyncPlugin;
 
-	constructor(app: App, plugin: Newslog) {
+	constructor(app: App, plugin: NewslogSyncPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

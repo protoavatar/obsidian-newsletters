@@ -5,7 +5,7 @@ export interface Newsletter {
   description: string;
 }
 
-export interface NewslogSettings {
+export interface NewslogSyncSettings {
   newsletters: Newsletter[];
   username: string;
   apiKey: string;

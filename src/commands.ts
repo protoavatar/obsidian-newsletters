@@ -235,3 +235,77 @@ async function triggerHighlightsDownload(
 		);
 	}
 }
+
+
+// --- NEW FUNCTION: To handle the download of the daily bundle ---
+export async function downloadDailyBundle(
+	plugin: NewslogSyncPlugin,
+	date: string
+): Promise<void> {
+	if (!plugin.settings.username || !plugin.settings.apiKey) {
+		new Notice("Username or API Key not configured in plugin settings.", 5000);
+		return;
+	}
+
+	try {
+		const bundles = await plugin.api.getDailyBundle(
+			plugin.settings.username,
+			plugin.settings.apiKey,
+			date
+		);
+
+		if (!bundles || bundles.length === 0) {
+			new Notice(`No bundles found for ${date}.`, 5000);
+			return;
+		}
+
+		new Notice(`Found ${bundles.length} bundles. Downloading...`, 5000);
+		let downloadedCount = 0;
+		let failedCount = 0;
+
+		const folderPath = plugin.settings.bundleFolderPath;
+		const folder = plugin.app.vault.getAbstractFileByPath(folderPath);
+		if (!(folder instanceof TFolder)) {
+			await plugin.app.vault.createFolder(folderPath);
+			console.log(`Created output folder: ${folderPath}`);
+		}
+
+		for (const bundle of bundles) {
+			const bundleFolderPath = `${folderPath}/${bundle.bundle_folder_name}`;
+			const bundleFolder =
+				plugin.app.vault.getAbstractFileByPath(bundleFolderPath);
+			if (!(bundleFolder instanceof TFolder)) {
+				await plugin.app.vault.createFolder(bundleFolderPath);
+			}
+
+			// Download each article in the bundle
+			for (const file of bundle.files) {
+				const articleContent = await downloadFileContent(file.url);
+				if (articleContent) {
+					const articleFilePath = `${bundleFolderPath}/${file.filename}`;
+					await plugin.app.vault.create(articleFilePath, articleContent);
+					downloadedCount++;
+				} else {
+					failedCount++;
+				}
+			}
+		}
+
+		new Notice(
+			`Download complete! Successfully downloaded ${downloadedCount} files. Failed: ${failedCount}.`,
+			10000
+		);
+
+		if (!plugin.settings.downloadedDates.includes(date)) {
+			plugin.settings.downloadedDates.push(date);
+			await plugin.saveSettings();
+		}
+
+	} catch (error) {
+		console.error(`Error downloading daily bundle for ${date}:`, error);
+		new Notice(
+			`An error occurred during the daily bundle download. See console for details.`,
+			7000
+		);
+	}
+}

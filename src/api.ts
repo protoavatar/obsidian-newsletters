@@ -1,5 +1,5 @@
 // api.ts (or wherever fetchMarkdownBundle is defined)
-import { Notice } from "obsidian"; // Optional: for user feedback
+import { Notice, requestUrl } from "obsidian"; // Optional: for user feedback
 import { DailyBundle } from "./types";
 
 // The URL for the Newslog server. This is hardcoded as it's a specific service.
@@ -294,15 +294,17 @@ export async function downloadFileContent(
 	console.log(`Downloading file content from S3: ${downloadUrl}`);
 
 	try {
-		const response = await fetch(downloadUrl);
+		const response = await requestUrl({ url: downloadUrl });
 
-		if (!response.ok) {
-			const errorText = await response
-				.text()
-				.catch(() => "Could not read error body");
+		// Unlike fetch, requestUrl throws an error for non-2xx responses, which is caught below.
+		// We just need to check for a successful status code.
+		if (response.status === 200) {
+			console.log(`Successfully downloaded file content.`);
+			return response.text;
+		} else {
 			console.error(
-				`Error downloading file content from S3: ${response.status} ${response.statusText}`,
-				errorText
+				`Error downloading file content from S3: ${response.status}`,
+				response.text
 			);
 			new Notice(
 				`Error downloading file content: ${response.status}. See console.`,
@@ -310,10 +312,6 @@ export async function downloadFileContent(
 			);
 			return null;
 		}
-
-		const content = await response.text();
-		console.log(`Successfully downloaded file content.`);
-		return content;
 	} catch (error) {
 		console.error(`Network or other error downloading file content:`, error);
 		new Notice(`Network error downloading file content. See console.`, 7000);
