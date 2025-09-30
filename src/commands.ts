@@ -12,7 +12,7 @@ import { CalendarModal } from "./ui/CalendarModal";
 export function registerCommands(plugin: NewslogSyncPlugin) {
 	plugin.addCommand({
 		id: "import-kindle-clippings-from-server",
-		name: "Upload Kindle's My Clippings.txt to newslog server",
+		name: "Upload Kindle's My Clippings.txt to server",
 		callback: () => {
 			triggerClippingsUpload(plugin);
 		},
@@ -20,7 +20,7 @@ export function registerCommands(plugin: NewslogSyncPlugin) {
 
 	plugin.addCommand({
 		id: "download-newslog-highlights",
-		name: "Download newslog Highlights to Vault",
+		name: "Download Highlights to Vault",
 		callback: async () => {
 			await triggerHighlightsDownload(plugin);
 		},
@@ -29,7 +29,7 @@ export function registerCommands(plugin: NewslogSyncPlugin) {
 	// --- NEW COMMAND: Download Daily Bundle ---
 	plugin.addCommand({
 		id: "download-daily-newslog-bundle",
-		name: "Download daily newslog bundle",
+		name: "Download daily news bundle",
 		callback: () => {
 			new CalendarModal(plugin.app, plugin).open();
 		},
@@ -40,7 +40,7 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 	const input = document.createElement("input");
 	input.type = "file";
 	input.accept = ".txt";
-	input.style.display = "none";
+	input.classList.add("hidden");
 
 	input.onchange = async (e) => {
 		const file = (e.target as HTMLInputElement).files?.[0];
@@ -62,7 +62,6 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 			if (input.parentNode) document.body.removeChild(input);
 			await processClippingsFile(plugin, file);
 		} catch (error) {
-			console.error("Error reading clippings file:", error);
 			new Notice(
 				"Error reading clippings file. See console for details.",
 				5000
@@ -103,12 +102,10 @@ async function processClippingsFile(
 		);
 
 		if (uploadSuccess) {
-			console.log("Clippings file sent to server for processing.");
 		} else {
 			new Notice("File upload failed. Check console for details.", 7000);
 		}
 	} catch (error) {
-		console.error("Error during clippings file upload process:", error);
 		new Notice(
 			"An unexpected error occurred during upload. See console for details.",
 			7000
@@ -126,11 +123,6 @@ async function triggerHighlightsDownload(
 
 	new Notice("Starting download of newslog highlights...", 5000);
 	try {
-		console.log(
-			`Requesting articles since: ${
-				plugin.settings.lastSyncDate || "No sync date found, fetching all."
-			}`
-		);
 		const s3Keys = await getHighlightedArticlesList(
 			plugin.settings.username,
 			plugin.settings.lastSyncDate,
@@ -150,7 +142,6 @@ async function triggerHighlightsDownload(
 		const folder = plugin.app.vault.getAbstractFileByPath(folderPath);
 		if (!(folder instanceof TFolder)) {
 			await plugin.app.vault.createFolder(folderPath);
-			console.log(`Created output folder: ${folderPath}`);
 		}
 
 		for (const s3Key of s3Keys) {
@@ -162,7 +153,6 @@ async function triggerHighlightsDownload(
 				);
 
 				if (!downloadUrl) {
-					console.warn(`Skipping ${s3Key}: Failed to get download URL.`);
 					failedCount++;
 					continue;
 				}
@@ -170,16 +160,12 @@ async function triggerHighlightsDownload(
 				const fileContent = await downloadFileContent(downloadUrl);
 
 				if (fileContent === null) {
-					console.warn(`Skipping ${s3Key}: Failed to download content.`);
 					failedCount++;
 					continue;
 				}
 
 				const parts = s3Key.split("/");
 				if (parts.length < 4) {
-					console.warn(
-						`Skipping ${s3Key}: Path does not have the expected structure.`
-					);
 					failedCount++;
 					continue;
 				}
@@ -192,7 +178,6 @@ async function triggerHighlightsDownload(
 					plugin.app.vault.getAbstractFileByPath(bundleFolderPath);
 				if (!(bundleFolder instanceof TFolder)) {
 					await plugin.app.vault.createFolder(bundleFolderPath);
-					console.log(`Created bundle subfolder: ${bundleFolderPath}`);
 				}
 
 				const filePath = `${bundleFolderPath}/${filename}`;
@@ -200,19 +185,14 @@ async function triggerHighlightsDownload(
 				const existingFile = plugin.app.vault.getAbstractFileByPath(filePath);
 				if (existingFile && existingFile instanceof TFile) {
 					await plugin.app.vault.modify(existingFile, fileContent);
-					console.log(`Updated existing file: ${filePath}`);
 				} else if (existingFile) {
-					console.warn(`Path ${filePath} exists but is not a file. Skipping.`);
-
 					failedCount++;
 					continue;
 				} else {
 					await plugin.app.vault.create(filePath, fileContent);
-					console.log(`Created new file: ${filePath}`);
 				}
 				downloadedCount++;
 			} catch (innerError) {
-				console.error(`Error processing S3 key ${s3Key}:`, innerError);
 				failedCount++;
 			}
 		}
@@ -225,17 +205,14 @@ async function triggerHighlightsDownload(
 		if (s3Keys && s3Keys.length > 0) {
 			plugin.settings.lastSyncDate = new Date().toISOString();
 			await plugin.saveSettings();
-			console.log(`Updated lastSyncDate to: ${plugin.settings.lastSyncDate}`);
 		}
 	} catch (error) {
-		console.error("Error during highlights download process:", error);
 		new Notice(
 			"An unexpected error occurred during highlights download. See console for details.",
 			7000
 		);
 	}
 }
-
 
 // --- NEW FUNCTION: To handle the download of the daily bundle ---
 export async function downloadDailyBundle(
@@ -267,7 +244,6 @@ export async function downloadDailyBundle(
 		const folder = plugin.app.vault.getAbstractFileByPath(folderPath);
 		if (!(folder instanceof TFolder)) {
 			await plugin.app.vault.createFolder(folderPath);
-			console.log(`Created output folder: ${folderPath}`);
 		}
 
 		for (const bundle of bundles) {
@@ -300,9 +276,7 @@ export async function downloadDailyBundle(
 			plugin.settings.downloadedDates.push(date);
 			await plugin.saveSettings();
 		}
-
 	} catch (error) {
-		console.error(`Error downloading daily bundle for ${date}:`, error);
 		new Notice(
 			`An error occurred during the daily bundle download. See console for details.`,
 			7000

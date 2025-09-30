@@ -86,7 +86,6 @@ async function makeNewslogRequest(
 	// Clonamos la URL para no modificar la original al remover datos sensibles para el log.
 	const logUrl = new URL(url.toString());
 	logUrl.searchParams.delete("apiKey"); // Asumiendo que la apiKey no debería estar en los logs.
-	console.log(`Requesting from: ${logUrl.toString()}`);
 	if (noticeMessage) {
 		new Notice(noticeMessage);
 	}
@@ -100,10 +99,6 @@ async function makeNewslogRequest(
 		if (response.status === 200) {
 			return response.json;
 		} else {
-			console.error(
-				`Error from ${endpoint}: ${response.status}`,
-				response.text
-			);
 			new Notice(
 				`Server error: ${response.status}. See console for details.`,
 				7000
@@ -111,7 +106,6 @@ async function makeNewslogRequest(
 			return null;
 		}
 	} catch (error) {
-		console.error(`Network or other error from ${endpoint}:`, error);
 		new Notice(`Network error. See console for details.`, 7000);
 		return null;
 	}
@@ -145,12 +139,10 @@ export async function getUploadUrl(
 	);
 
 	if (isUploadUrlResponse(data)) {
-		console.log("Successfully received upload URL.");
 		return data.uploadUrl;
 	}
 
 	if (data) {
-		console.error("Upload URL not found in response:", data);
 		new Notice("Error: Upload URL not provided by server.", 7000);
 	}
 	return null;
@@ -168,7 +160,6 @@ export async function uploadFileToS3(
 	uploadUrl: string,
 	file: File
 ): Promise<boolean> {
-	console.log(`Uploading file to S3: ${uploadUrl}`);
 	new Notice(`Uploading ${file.name}...`);
 
 	try {
@@ -182,17 +173,12 @@ export async function uploadFileToS3(
 		});
 
 		if (response.status === 200) {
-			console.log(`Successfully uploaded ${file.name} to S3.`);
 			new Notice(
 				`Successfully uploaded ${file.name}! Processing will continue on the server.`,
 				7000
 			);
 			return true;
 		} else {
-			console.error(
-				`Error uploading file to S3: ${response.status}`,
-				response.text
-			);
 			new Notice(
 				`Error uploading file: ${response.status}. See console.`,
 				7000
@@ -200,7 +186,6 @@ export async function uploadFileToS3(
 			return false;
 		}
 	} catch (error) {
-		console.error(`Network or other error uploading file:`, error);
 		new Notice(`Network error uploading file. See console.`, 7000);
 		return false;
 	}
@@ -228,14 +213,10 @@ export async function getHighlightedArticlesList(
 	);
 
 	if (isS3KeysResponse(data)) {
-		console.log(
-			`Successfully received ${data.s3Keys.length} highlighted article keys.`
-		);
 		return data.s3Keys;
 	}
 
 	if (data) {
-		console.error("S3 keys not found in response or invalid format:", data);
 		new Notice(
 			"Error: S3 keys not provided by server or invalid format.",
 			7000
@@ -285,21 +266,14 @@ export async function getDownloadUrl(
 export async function downloadFileContent(
 	downloadUrl: string
 ): Promise<string | null> {
-	console.log(`Downloading file content from S3: ${downloadUrl}`);
-
 	try {
 		const response = await requestUrl({ url: downloadUrl });
 
 		// Unlike fetch, requestUrl throws an error for non-2xx responses, which is caught below.
 		// We just need to check for a successful status code.
 		if (response.status === 200) {
-			console.log(`Successfully downloaded file content.`);
 			return response.text;
 		} else {
-			console.error(
-				`Error downloading file content from S3: ${response.status}`,
-				response.text
-			);
 			new Notice(
 				`Error downloading file content: ${response.status}. See console.`,
 				7000
@@ -307,7 +281,6 @@ export async function downloadFileContent(
 			return null;
 		}
 	} catch (error) {
-		console.error(`Network or other error downloading file content:`, error);
 		new Notice(`Network error downloading file content. See console.`, 7000);
 		return null;
 	}
@@ -341,14 +314,10 @@ export async function getDailyBundle(
 	);
 
 	if (isBundlesResponse(data)) {
-		console.log(
-			`Successfully received ${data.bundles.length} bundles for ${date}.`
-		);
 		return data.bundles as DailyBundle[];
 	}
 
 	if (data) {
-		console.error("Bundles not found in response or invalid format:", data);
 		new Notice(
 			"Error: Bundles not provided by server or invalid format.",
 			7000
