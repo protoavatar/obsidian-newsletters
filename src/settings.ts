@@ -25,8 +25,6 @@ export class NewslogSettingTab extends PluginSettingTab {
 
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "newslog settings" });
-
 		const usernameSetting = new Setting(containerEl)
 			.setName("API Username")
 			.setDesc("Your newslog.me username.")
