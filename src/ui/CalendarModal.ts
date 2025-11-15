@@ -26,7 +26,7 @@ export class CalendarModal extends Modal {
 	renderCalendar(container: HTMLElement) {
 		container.empty(); // Clear previous content
 
-		const header = container.createDiv({ cls: "calendar-header" });
+		const header = container.createDiv({ cls: "newslog-calendar-header" });
 		header.createEl("button", { text: "<" }).onclick = () => {
 			this.currentDate.setMonth(this.currentDate.getMonth() - 1);
 			this.renderCalendar(container);
@@ -42,7 +42,7 @@ export class CalendarModal extends Modal {
 			this.renderCalendar(container);
 		};
 
-		const calendarGrid = container.createDiv({ cls: "calendar-container" });
+		const calendarGrid = container.createDiv({ cls: "newslog-calendar-container" });
 		const year = this.currentDate.getFullYear();
 		const month = this.currentDate.getMonth();
 		const firstDay = new Date(year, month, 1).getDay();
@@ -51,12 +51,12 @@ export class CalendarModal extends Modal {
 		// Add day labels
 		const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 		dayLabels.forEach((day) => {
-			calendarGrid.createDiv({ text: day, cls: "calendar-day-label" });
+			calendarGrid.createDiv({ text: day, cls: "newslog-calendar-day-label" });
 		});
 
 		// Add empty cells for days before the 1st
 		for (let i = 0; i < firstDay; i++) {
-			calendarGrid.createDiv({ cls: "calendar-day disabled" });
+			calendarGrid.createDiv({ cls: "newslog-calendar-day newslog-disabled" });
 		}
 
 		// Add day cells
@@ -65,11 +65,11 @@ export class CalendarModal extends Modal {
 			const dateString = date.toISOString().split("T")[0];
 			const dayCell = calendarGrid.createDiv({
 				text: String(day),
-				cls: "calendar-day",
+				cls: "newslog-calendar-day",
 			});
 
 			if (this.plugin.settings.downloadedDates.includes(dateString)) {
-				dayCell.addClass("downloaded");
+				dayCell.addClass("newslog-downloaded");
 			}
 
 			if (
@@ -77,7 +77,7 @@ export class CalendarModal extends Modal {
 				date.getMonth() === new Date().getMonth() &&
 				date.getFullYear() === new Date().getFullYear()
 			) {
-				dayCell.addClass("today");
+				dayCell.addClass("newslog-today");
 			}
 
 			dayCell.onclick = async () => {

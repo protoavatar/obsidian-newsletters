@@ -1,42 +1,47 @@
-.calendar-container {
+.newslog-calendar-container {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
     padding: 10px;
 }
 
-.calendar-header {
+.newslog-calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
 }
 
-.calendar-day {
+.newslog-calendar-day-label {
+    text-align: center;
+    font-weight: bold;
+}
+
+.newslog-calendar-day {
     padding: 10px;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
 }
 
-.calendar-day:hover {
+.newslog-calendar-day:hover {
     background-color: #f0f0f0;
 }
 
-.calendar-day.downloaded {
+.newslog-downloaded {
     background-color: #a0c4ff; 
     color: white;
 }
 
-.calendar-day.today {
+.newslog-today {
     border: 1px solid #ccc;
 }
 
-.calendar-day.disabled {
+.newslog-disabled {
     color: #ccc;
     cursor: not-allowed;
 }
 
-.hidden {
+.newslog-hidden {
 	display: none;
 }
