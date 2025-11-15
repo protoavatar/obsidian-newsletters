@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, normalizePath, PluginSettingTab, Setting } from "obsidian";
 import NewslogSyncPlugin from "./main";
 import { NewslogSyncSettings } from "./types";
 
@@ -115,7 +115,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 					.setPlaceholder("Enter the folder path")
 					.setValue(this.plugin.settings.bundleFolderPath)
 					.onChange(async (value) => {
-						this.plugin.settings.bundleFolderPath = value;
+						this.plugin.settings.bundleFolderPath = normalizePath(value);
 						await this.plugin.saveSettings();
 					})
 			);
