@@ -1,4 +1,4 @@
-# newslog Obsidian Plugin
+# newslog for Obsidian
 
 [newslog](https://newslog.me) bundles your newsletters and articles into a single daily digest, complete with an index, AI-powered summaries, and calm reading modes for both Kindle and Obsidian.
 
