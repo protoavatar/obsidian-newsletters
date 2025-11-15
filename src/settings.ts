@@ -1,4 +1,5 @@
 import { App, normalizePath, PluginSettingTab, Setting } from "obsidian";
+import { FolderSuggest } from "./ui/FolderSuggest";
 import NewslogSyncPlugin from "./main";
 import { NewslogSyncSettings } from "./types";
 
@@ -95,30 +96,32 @@ export class NewslogSettingTab extends PluginSettingTab {
 			.setDesc(
 				"The path in your Obsidian vault where highlighted articles from Kindle will be saved."
 			)
-			.addText((text) =>
+			.addText((text) => {
+				new FolderSuggest(this.app, text.inputEl);
 				text
 					.setPlaceholder("Enter the folder path")
 					.setValue(this.plugin.settings.outputFolderPath)
 					.onChange(async (value) => {
 						this.plugin.settings.outputFolderPath = value;
 						await this.plugin.saveSettings();
-					})
-			);
+					});
+			});
 
 		new Setting(containerEl)
 			.setName("Daily Bundle Folder Path")
 			.setDesc(
 				"The path in your Obsidian vault where daily bundles will be stored."
 			)
-			.addText((text) =>
+			.addText((text) => {
+				new FolderSuggest(this.app, text.inputEl);
 				text
 					.setPlaceholder("Enter the folder path")
 					.setValue(this.plugin.settings.bundleFolderPath)
 					.onChange(async (value) => {
 						this.plugin.settings.bundleFolderPath = normalizePath(value);
 						await this.plugin.saveSettings();
-					})
-			);
+					});
+			});
 
 		new Setting(containerEl)
 			.setName("Last Highlights Sync Date")
