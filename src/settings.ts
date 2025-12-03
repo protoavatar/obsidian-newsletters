@@ -94,7 +94,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Highlights folder path")
 			.setDesc(
-				"The path in your Obsidian vault where highlighted articles from Kindle will be saved."
+				"The path in your obsidian vault where highlighted articles from kindle will be saved."
 			)
 			.addText((text) => {
 				new FolderSuggest(this.app, text.inputEl);

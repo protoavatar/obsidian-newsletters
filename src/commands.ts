@@ -12,7 +12,7 @@ import { CalendarModal } from "./ui/CalendarModal";
 export function registerCommands(plugin: NewslogSyncPlugin) {
 	plugin.addCommand({
 		id: "import-kindle-clippings-from-server",
-		name: "Upload Kindle's 'My Clippings.txt' to server",
+		name: "Upload kindle's 'my clippings.txt' to server",
 		callback: () => {
 			triggerClippingsUpload(plugin);
 		},
@@ -52,7 +52,7 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 
 		if (file.name.toLowerCase() !== "my clippings.txt") {
 			new Notice(
-				`Warning: Selected file is not named "My Clippings.txt"`,
+				`Warning: Selected file is not named "my clippings.txt"`,
 				4000
 			);
 		}
@@ -79,7 +79,10 @@ async function processClippingsFile(
 	file: File
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("The username or API key is not configured in the plugin settings.", 5000);
+		new Notice(
+			"The username or API key is not configured in the plugin settings.",
+			5000
+		);
 		return;
 	}
 
@@ -116,7 +119,10 @@ async function triggerHighlightsDownload(
 	plugin: NewslogSyncPlugin
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("The username or API key is not configured in the plugin settings.", 5000);
+		new Notice(
+			"The username or API key is not configured in the plugin settings.",
+			5000
+		);
 		return;
 	}
 
@@ -219,7 +225,10 @@ export async function downloadDailyBundle(
 	date: string
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("The username or API key is not configured in the plugin settings.", 5000);
+		new Notice(
+			"The username or API key is not configured in the plugin settings.",
+			5000
+		);
 		return;
 	}
 
