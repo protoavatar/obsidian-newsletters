@@ -27,7 +27,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const usernameSetting = new Setting(containerEl)
-			.setName("API Username")
+			.setName("API username")
 			.setDesc("Your newslog.me username.")
 			.addText((text) => {
 				text
@@ -42,23 +42,23 @@ export class NewslogSettingTab extends PluginSettingTab {
 			.addExtraButton((button) => {
 				button
 					.setIcon("eye")
-					.setTooltip("Show Username")
+					.setTooltip("Show username")
 					.onClick(() => {
 						const input = usernameSetting.controlEl.querySelector("input");
 						if (input) {
 							if (input.type === "password") {
 								input.type = "text";
-								button.setIcon("eye-off").setTooltip("Hide Username");
+								button.setIcon("eye-off").setTooltip("Hide username");
 							} else {
 								input.type = "password";
-								button.setIcon("eye").setTooltip("Show Username");
+								button.setIcon("eye").setTooltip("Show username");
 							}
 						}
 					});
 			});
 
 		const apiKeySetting = new Setting(containerEl)
-			.setName("API Key")
+			.setName("API key")
 			.setDesc("Your newslog.me API key.")
 			.addText((text) => {
 				text
@@ -74,25 +74,25 @@ export class NewslogSettingTab extends PluginSettingTab {
 			.addExtraButton((button) => {
 				button
 					.setIcon("eye")
-					.setTooltip("Show API Key")
+					.setTooltip("Show API key")
 					.onClick(() => {
 						const input = apiKeySetting.controlEl.querySelector("input");
 						if (input) {
 							if (input.type === "password") {
 								input.type = "text";
 								button.setIcon("eye-off");
-								button.setTooltip("Hide API Key");
+								button.setTooltip("Hide API key");
 							} else {
 								input.type = "password";
 								button.setIcon("eye");
-								button.setTooltip("Show API Key");
+								button.setTooltip("Show API key");
 							}
 						}
 					});
 			});
 
 		new Setting(containerEl)
-			.setName("Highlights Folder Path")
+			.setName("Highlights folder path")
 			.setDesc(
 				"The path in your Obsidian vault where highlighted articles from Kindle will be saved."
 			)
@@ -108,7 +108,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Daily Bundle Folder Path")
+			.setName("Daily bundle folder path")
 			.setDesc(
 				"The path in your Obsidian vault where daily bundles will be stored."
 			)
@@ -124,7 +124,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Last Highlights Sync Date")
+			.setName("Last highlights sync date")
 			.setDesc(
 				this.plugin.settings.lastSyncDate
 					? new Date(this.plugin.settings.lastSyncDate).toLocaleString()
@@ -132,7 +132,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Reset Highlight History")
+			.setName("Reset highlight history")
 			.setDesc("This will re-download your entire highlight history.")
 			.addButton((button) =>
 				button.setButtonText("Reset").onClick(async () => {
@@ -143,7 +143,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Reset Daily Bundle Download History")
+			.setName("Reset daily bundle download history")
 			.setDesc("This will clear the downloaded dates from the calendar picker.")
 			.addButton((button) =>
 				button.setButtonText("Reset").onClick(async () => {

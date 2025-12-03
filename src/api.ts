@@ -62,11 +62,11 @@ async function makeNewslogRequest(
 		queryParams?: Record<string, string | null>;
 		noticeMessage: string;
 	}
-): Promise<unknown | null> {
+): Promise<unknown> {
 	const { queryParams = {}, noticeMessage } = options;
 
 	if (!username || !apiKey) {
-		new Notice("Username or API Key not configured in settings.", 5000);
+		new Notice("The username or API key is not configured in the settings.", 5000);
 		return null;
 	}
 
@@ -93,7 +93,7 @@ async function makeNewslogRequest(
 	try {
 		const response = await requestUrl({
 			url: url.toString(),
-			headers: headers as Record<string, string>,
+			headers,
 		});
 
 		if (response.status === 200) {
@@ -105,7 +105,7 @@ async function makeNewslogRequest(
 			);
 			return null;
 		}
-	} catch (error) {
+	} catch {
 		new Notice(`Network error. See console for details.`, 7000);
 		return null;
 	}
@@ -143,7 +143,7 @@ export async function getUploadUrl(
 	}
 
 	if (data) {
-		new Notice("Error: Upload URL not provided by server.", 7000);
+		new Notice("Upload URL not provided by server.", 7000);
 	}
 	return null;
 }
@@ -160,7 +160,7 @@ export async function uploadFileToS3(
 	uploadUrl: string,
 	file: File
 ): Promise<boolean> {
-	new Notice(`Uploading ${file.name}...`);
+	new Notice(`Uploading ${file.name}.`);
 
 	try {
 		const response = await requestUrl({
@@ -185,7 +185,7 @@ export async function uploadFileToS3(
 			);
 			return false;
 		}
-	} catch (error) {
+	} catch {
 		new Notice(`Network error uploading file. See console.`, 7000);
 		return false;
 	}
@@ -238,7 +238,7 @@ export async function getDownloadUrl(
 	s3Key: string
 ): Promise<string | null> {
 	if (!s3Key || s3Key.trim() === "") {
-		new Notice("S3 Key is empty for download.", 5000);
+		new Notice("S3 key is empty for download.", 5000);
 		return null;
 	}
 
@@ -280,7 +280,7 @@ export async function downloadFileContent(
 			);
 			return null;
 		}
-	} catch (error) {
+	} catch {
 		new Notice(`Network error downloading file content. See console.`, 7000);
 		return null;
 	}
@@ -299,7 +299,7 @@ export async function getDailyBundle(
 	date: string
 ): Promise<DailyBundle[] | null> {
 	if (!date) {
-		new Notice("Date is missing.", 5000);
+		new Notice("A date is required for this action.", 5000);
 		return null;
 	}
 
@@ -314,12 +314,12 @@ export async function getDailyBundle(
 	);
 
 	if (isBundlesResponse(data)) {
-		return data.bundles as DailyBundle[];
+		return data.bundles;
 	}
 
 	if (data) {
 		new Notice(
-			"Error: Bundles not provided by server or invalid format.",
+			"The server did not provide bundles, or they are in an invalid format.",
 			7000
 		);
 	}

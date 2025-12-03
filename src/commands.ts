@@ -12,15 +12,15 @@ import { CalendarModal } from "./ui/CalendarModal";
 export function registerCommands(plugin: NewslogSyncPlugin) {
 	plugin.addCommand({
 		id: "import-kindle-clippings-from-server",
-		name: "Upload Kindle's My Clippings.txt to server",
+		name: "Upload Kindle's 'My Clippings.txt' to server",
 		callback: () => {
 			triggerClippingsUpload(plugin);
 		},
 	});
 
 	plugin.addCommand({
-		id: "download-newslog-highlights",
-		name: "Download Highlights to Vault",
+		id: "download-highlights",
+		name: "Download highlights to vault",
 		callback: async () => {
 			await triggerHighlightsDownload(plugin);
 		},
@@ -28,7 +28,7 @@ export function registerCommands(plugin: NewslogSyncPlugin) {
 
 	// --- NEW COMMAND: Download Daily Bundle ---
 	plugin.addCommand({
-		id: "download-daily-newslog-bundle",
+		id: "download-daily-bundle",
 		name: "Download daily news bundle",
 		callback: () => {
 			new CalendarModal(plugin.app, plugin).open();
@@ -45,7 +45,7 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 	input.onchange = async (e) => {
 		const file = (e.target as HTMLInputElement).files?.[0];
 		if (!file) {
-			new Notice("No file selected.");
+			new Notice("No file was selected.");
 			if (input.parentNode) document.body.removeChild(input);
 			return;
 		}
@@ -61,7 +61,7 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 		try {
 			if (input.parentNode) document.body.removeChild(input);
 			await processClippingsFile(plugin, file);
-		} catch (error) {
+		} catch {
 			new Notice(
 				"Error reading clippings file. See console for details.",
 				5000
@@ -79,7 +79,7 @@ async function processClippingsFile(
 	file: File
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("Username or API Key not configured in plugin settings.", 5000);
+		new Notice("The username or API key is not configured in the plugin settings.", 5000);
 		return;
 	}
 
@@ -101,11 +101,10 @@ async function processClippingsFile(
 			file
 		);
 
-		if (uploadSuccess) {
-		} else {
+		if (!uploadSuccess) {
 			new Notice("File upload failed. Check console for details.", 7000);
 		}
-	} catch (error) {
+	} catch {
 		new Notice(
 			"An unexpected error occurred during upload. See console for details.",
 			7000
@@ -117,7 +116,7 @@ async function triggerHighlightsDownload(
 	plugin: NewslogSyncPlugin
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("Username or API Key not configured in plugin settings.", 5000);
+		new Notice("The username or API key is not configured in the plugin settings.", 5000);
 		return;
 	}
 
@@ -192,7 +191,7 @@ async function triggerHighlightsDownload(
 					await plugin.app.vault.create(filePath, fileContent);
 				}
 				downloadedCount++;
-			} catch (innerError) {
+			} catch {
 				failedCount++;
 			}
 		}
@@ -206,7 +205,7 @@ async function triggerHighlightsDownload(
 			plugin.settings.lastSyncDate = new Date().toISOString();
 			await plugin.saveSettings();
 		}
-	} catch (error) {
+	} catch {
 		new Notice(
 			"An unexpected error occurred during highlights download. See console for details.",
 			7000
@@ -220,7 +219,7 @@ export async function downloadDailyBundle(
 	date: string
 ): Promise<void> {
 	if (!plugin.settings.username || !plugin.settings.apiKey) {
-		new Notice("Username or API Key not configured in plugin settings.", 5000);
+		new Notice("The username or API key is not configured in the plugin settings.", 5000);
 		return;
 	}
 
@@ -276,7 +275,7 @@ export async function downloadDailyBundle(
 			plugin.settings.downloadedDates.push(date);
 			await plugin.saveSettings();
 		}
-	} catch (error) {
+	} catch {
 		new Notice(
 			`An error occurred during the daily bundle download. See console for details.`,
 			7000
