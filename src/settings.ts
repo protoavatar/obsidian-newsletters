@@ -102,7 +102,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 					.setPlaceholder("Enter the folder path")
 					.setValue(this.plugin.settings.outputFolderPath)
 					.onChange(async (value) => {
-						this.plugin.settings.outputFolderPath = value;
+						this.plugin.settings.outputFolderPath = normalizePath(value);
 						await this.plugin.saveSettings();
 					});
 			});
