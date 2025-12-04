@@ -94,7 +94,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Highlights folder path")
 			.setDesc(
-				"The path in your obsidian vault where highlighted articles from kindle will be saved."
+				"Path in your vault where highlighted articles from kindle will be saved."
 			)
 			.addText((text) => {
 				new FolderSuggest(this.app, text.inputEl);
@@ -109,9 +109,7 @@ export class NewslogSettingTab extends PluginSettingTab {
 
 		new Setting(containerEl)
 			.setName("Daily bundle folder path")
-			.setDesc(
-				"The path in your Obsidian vault where daily bundles will be stored."
-			)
+			.setDesc("Path in your vault where daily bundles will be stored.")
 			.addText((text) => {
 				new FolderSuggest(this.app, text.inputEl);
 				text

@@ -51,10 +51,7 @@ function triggerClippingsUpload(plugin: NewslogSyncPlugin): void {
 		}
 
 		if (file.name.toLowerCase() !== "my clippings.txt") {
-			new Notice(
-				`Warning: Selected file is not named "my clippings.txt"`,
-				4000
-			);
+			new Notice(`Selected file is not named "my clippings.txt"`, 4000);
 		}
 
 		new Notice(`Reading ${file.name}...`);
