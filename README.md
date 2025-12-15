@@ -22,7 +22,7 @@ With a personalized `@newslog.me` email address, you can subscribe to newsletter
 
     ![](newslog-settings.png)
 
-    - **API Username** and **API Password**: Get this information from your account at newslog.me/settings.
+    - **API Key** and **API Password**: Get this information from your account at newslog.me/settings.
     - **Highlights Folder Path**: The path in your Obsidian vault where highlighted articles from Kindle will be saved.
     - **Daily Bundle Folder Path**: The path in your Obsidian vault where daily bundles will be stored.
     - **Last Highlights Sync Date**: The last date you synced your Kindle highlights.

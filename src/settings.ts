@@ -27,11 +27,11 @@ export class NewslogSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const usernameSetting = new Setting(containerEl)
-			.setName("API username")
-			.setDesc("Your newslog.me username.")
+			.setName("API key")
+			.setDesc("Your newslog.me API key.")
 			.addText((text) => {
 				text
-					.setPlaceholder("Enter your username")
+					.setPlaceholder("Enter your API key")
 					.setValue(this.plugin.settings.username)
 					.onChange(async (value) => {
 						this.plugin.settings.username = value;
@@ -42,27 +42,27 @@ export class NewslogSettingTab extends PluginSettingTab {
 			.addExtraButton((button) => {
 				button
 					.setIcon("eye")
-					.setTooltip("Show username")
+					.setTooltip("Show API key")
 					.onClick(() => {
 						const input = usernameSetting.controlEl.querySelector("input");
 						if (input) {
 							if (input.type === "password") {
 								input.type = "text";
-								button.setIcon("eye-off").setTooltip("Hide username");
+								button.setIcon("eye-off").setTooltip("Hide API key");
 							} else {
 								input.type = "password";
-								button.setIcon("eye").setTooltip("Show username");
+								button.setIcon("eye").setTooltip("Show API key");
 							}
 						}
 					});
 			});
 
 		const apiKeySetting = new Setting(containerEl)
-			.setName("API key")
-			.setDesc("Your newslog.me API key.")
+			.setName("API password")
+			.setDesc("Your newslog.me API password.")
 			.addText((text) => {
 				text
-					.setPlaceholder("Enter your API key")
+					.setPlaceholder("Enter your API password")
 					.setValue(this.plugin.settings.apiKey)
 					.onChange(async (value) => {
 						this.plugin.settings.apiKey = value;
@@ -74,18 +74,18 @@ export class NewslogSettingTab extends PluginSettingTab {
 			.addExtraButton((button) => {
 				button
 					.setIcon("eye")
-					.setTooltip("Show API key")
+					.setTooltip("Show API password")
 					.onClick(() => {
 						const input = apiKeySetting.controlEl.querySelector("input");
 						if (input) {
 							if (input.type === "password") {
 								input.type = "text";
 								button.setIcon("eye-off");
-								button.setTooltip("Hide API key");
+								button.setTooltip("Hide API password");
 							} else {
 								input.type = "password";
 								button.setIcon("eye");
-								button.setTooltip("Show API key");
+								button.setTooltip("Show API password");
 							}
 						}
 					});
